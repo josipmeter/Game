@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Vrlo jednostavna HTML5 igra</title>
+    <style>
+      canvas {
+        border: 1px solid #000000;
+        background-color: #f1f1f1;
+      }
+    </style>
+    <script>
+      const maxComps = 10;
+      const minComps = 5;
+      var compsNum = Math.random() * (maxComps - minComps) + minComps;
+      var currNum = Math.ceil(compsNum);
+      var myGamePieces = [];
+      function startGame() {
+        for (var i = 0; i < compsNum; i++) {
+          var x = Math.random() * (640 - 30 - 30) + 30;
+          var y = Math.random() * (480 - 30 - 30) + 30;
+          myGamePieces[i] = new component(30, 30, "red", x, y);
+          // this.myGamePieces[i].id = `comp${i}`;
+        }
+        myGameArea.start();
+      }
+      var myGameArea = {
+        canvas: document.createElement("canvas"),
+        start: function () {
+          this.canvas.id = "myGameCanvas";
+          this.canvas.width = 640;
+          this.canvas.height = 480;
+          this.context = this.canvas.getContext("2d");
+          document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+          this.frameNo = 0;
+          this.interval = setInterval(updateGameArea, 20);
+        },
+        stop: function () {
+          clearInterval(this.interval);
+        },
+        clear: function () {
+          this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        },
+      };
+      function component(width, height, color, x, y, type) {
+        this.type = type;
+        this.width = width;
+        this.height = height;
+        this.speed_x = Math.random() * (5 + 5) - 5;
+        this.speed_y = Math.random() * (5 + 5) - 5;
+        this.x = x;
+        this.y = y;
+        this.update = function () {
+          ctx = myGameArea.context;
+          ctx.font = "19px Calibri";
+          ctx.strokeText(
+            `Generated components: ${Math.ceil(compsNum)}`,
+            420,
+            20
+          );
+          //ctx.strokeText(`Current components: ${currNum}`, 420, 40);
+          ctx.save();
+          ctx.translate(this.x, this.y);
+          ctx.fillStyle = color;
+          ctx.fillRect(
+            this.width / -2,
+            this.height / -2,
+            this.width,
+            this.height
+          );
+          ctx.restore();
+        };
+        this.newPos = function () {
+          var newSpeed =
+            Math.random() *
+              (Math.abs(this.speed_x / 2) + Math.abs(this.speed_x / 2)) -
+            Math.abs(this.speed_x / 2);
+          if (this.x - this.width / 2 < 0) {
+            this.speed_x = Math.abs(this.speed_x) + newSpeed;
+            //this.speed_y += newSpeed;
+          } else if (
+            this.x + this.width / 2 >=
+            myGameArea.context.canvas.width
+          ) {
+            this.speed_x = -Math.abs(this.speed_x) + newSpeed;
+            //this.speed_y += newSpeed;
+          }
+          if (this.y - this.height / 2 < 0) {
+            this.speed_y = -Math.abs(this.speed_y) + newSpeed;
+            // this.speed_x += newSpeed;
+          } else if (
+            this.y + this.height / 2 >=
+            myGameArea.context.canvas.height
+          ) {
+            this.speed_y = Math.abs(this.speed_y) + newSpeed;
+            // this.speed_x += newSpeed;
+          }
+
+          this.x += this.speed_x;
+          this.y -= this.speed_y;
+        };
+      }
+
+      function updateGameArea() {
+        myGameArea.clear();
+        for (var i = 0; i < compsNum; i++) {
+          myGamePieces[i].newPos();
+          myGamePieces[i].update();
+        }
+      }
+    </script>
+  </head>
+  <body onload="startGame()"></body>
+</html>
