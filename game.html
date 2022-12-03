@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Vrlo jednostavna HTML5 igra</title>
+    <title>Game</title>
     <style>
       canvas {
         border: 1px solid #000000;
@@ -76,23 +76,19 @@
             Math.abs(this.speed_x / 2);
           if (this.x - this.width / 2 < 0) {
             this.speed_x = Math.abs(this.speed_x) + newSpeed;
-            //this.speed_y += newSpeed;
           } else if (
             this.x + this.width / 2 >=
             myGameArea.context.canvas.width
           ) {
             this.speed_x = -Math.abs(this.speed_x) + newSpeed;
-            //this.speed_y += newSpeed;
           }
           if (this.y - this.height / 2 < 0) {
             this.speed_y = -Math.abs(this.speed_y) + newSpeed;
-            // this.speed_x += newSpeed;
           } else if (
             this.y + this.height / 2 >=
             myGameArea.context.canvas.height
           ) {
             this.speed_y = Math.abs(this.speed_y) + newSpeed;
-            // this.speed_x += newSpeed;
           }
 
           this.x += this.speed_x;
